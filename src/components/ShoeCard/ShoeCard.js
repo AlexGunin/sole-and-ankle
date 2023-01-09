@@ -1,9 +1,25 @@
-import React from 'react';
-import styled from 'styled-components/macro';
+import React from "react";
+import styled from "styled-components/macro";
 
-import { COLORS, WEIGHTS } from '../../constants';
-import { formatPrice, pluralize, isNewShoe } from '../../utils';
-import Spacer from '../Spacer';
+import { COLORS, WEIGHTS } from "../../constants";
+import { formatPrice, pluralize, isNewShoe } from "../../utils";
+import Spacer from "../Spacer";
+
+const STICK_STATUSES = {
+  "on-sale": "on-sale",
+  "new-release": "new-release",
+  default: "default",
+};
+
+const COLOR_STICK_STATUS = {
+  [STICK_STATUSES["on-sale"]]: COLORS.primary,
+  [STICK_STATUSES["new-release"]]: COLORS.secondary,
+};
+
+const TEXT_STICK_STATUS = {
+  [STICK_STATUSES["on-sale"]]: "Sale",
+  [STICK_STATUSES["new-release"]]: "Just Released!",
+};
 
 const ShoeCard = ({
   slug,
@@ -43,25 +59,47 @@ const ShoeCard = ({
           <Price>{formatPrice(price)}</Price>
         </Row>
         <Row>
-          <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
+          <ColorInfo>{pluralize("Color", numOfColors)}</ColorInfo>
         </Row>
+        {variant !== "default" && (
+          <StickStatus variant={variant}>
+            {TEXT_STICK_STATUS[variant]}
+          </StickStatus>
+        )}
       </Wrapper>
     </Link>
   );
 };
+
+const StickStatus = styled.span`
+  position: absolute;
+  top: 12px;
+  right: -4px;
+  width: fit-content;
+  background: ${(p) => COLOR_STICK_STATUS[p.variant]};
+  color: white;
+  padding: 8px 10px;
+  border-radius: 2px;
+`;
 
 const Link = styled.a`
   text-decoration: none;
   color: inherit;
 `;
 
-const Wrapper = styled.article``;
+const Wrapper = styled.article`
+  position: relative;
+  flex: 1;
+  max-width: 340px;
+`;
 
 const ImageWrapper = styled.div`
   position: relative;
 `;
 
-const Image = styled.img``;
+const Image = styled.img`
+  max-width: 100%;
+`;
 
 const Row = styled.div`
   font-size: 1rem;
